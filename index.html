@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shakti Singh Rana — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #E50914; --bg: #141414; --surface: #1f1f1f;
+  --surface2: #2a2a2a; --text: #fff; --muted: #a3a3a3;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 48px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%);
+  transition: background 0.3s;
+}
+.nav.solid { background: rgba(0,0,0,0.97); }
+.logo { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:var(--red); letter-spacing:2px; text-shadow:0 0 30px rgba(229,9,20,.5); cursor:pointer; }
+.nav-links { display:flex; gap:28px; }
+.nav-links a { color:var(--muted); font-size:.82rem; text-decoration:none; letter-spacing:.06em; text-transform:uppercase; transition:color .2s; }
+.nav-links a:hover { color:#fff; }
+@media(max-width:640px){ .nav{padding:14px 18px;} .nav-links{gap:14px;} .nav-links a{font-size:.72rem;} }
+
+/* ── WELCOME ── */
+#welcome-screen {
+  position: fixed; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at 60% 40%, #1a0505 0%, #0d0d0d 60%, #000 100%);
+  z-index: 10; transition: opacity .65s ease, transform .65s ease;
+}
+#welcome-screen::before {
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 4px);
+  pointer-events:none;
+}
+#welcome-screen.exit { opacity:0; transform:scale(1.05); pointer-events:none; }
+.welcome-title { font-weight:300; font-size:clamp(1.2rem,2.8vw,1.8rem); letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin-bottom:56px; animation:fadeUp .8s ease both; }
+.profiles { display:flex; gap:40px; animation:fadeUp .9s .12s ease both; }
+.profile-card { display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:transform .28s; }
+.profile-card:hover { transform:translateY(-10px); }
+.profile-card:hover .pa { box-shadow:0 0 0 3px #fff,0 20px 60px rgba(229,9,20,.45); }
+.profile-card:hover .pn { color:#fff; }
+.pa {
+  width:148px; height:148px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+  font-size:3.4rem; font-family:'Bebas Neue',sans-serif; letter-spacing:3px;
+  background:linear-gradient(135deg,#6b0000 0%,#e50914 50%,#ff4e00 100%);
+  box-shadow:0 10px 40px rgba(0,0,0,.7); transition:box-shadow .28s; position:relative; overflow:hidden; color:#fff;
+}
+.pa::after { content:''; position:absolute; inset:0; background:linear-gradient(155deg,rgba(255,255,255,.18) 0%,transparent 55%); }
+.pa .ini { position:relative; z-index:1; }
+.pn { margin-top:16px; font-size:.88rem; font-weight:500; color:var(--muted); letter-spacing:.05em; text-align:center; transition:color .2s; max-width:148px; }
+
+/* ── MAIN ── */
+#main { display:none; }
+#main.show { display:block; animation:fadeIn .5s ease both; }
+
+/* ── SECTIONS ── */
+.section { padding:80px 0; max-width:960px; margin:0 auto; padding-left:24px; padding-right:24px; }
+.section:first-child { padding-top:120px; }
+
+.section-label {
+  font-family:'Bebas Neue',sans-serif; font-size:.72rem; letter-spacing:.3em; color:var(--red);
+  text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:12px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,#2c2c2c,transparent); }
+.section-title { font-family:'DM Serif Display',serif; font-size:clamp(1.8rem,3.5vw,2.6rem); font-weight:400; margin-bottom:10px; }
+
+/* ── HERO ── */
+#hero { min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+#hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(229,9,20,.12) 0%,transparent 65%),
+             radial-gradient(ellipse at 80% 20%,rgba(229,9,20,.07) 0%,transparent 55%);
+}
+.hero-inner { display:flex; align-items:center; gap:56px; position:relative; z-index:1; max-width:960px; width:100%; padding:0 24px; margin:0 auto; }
+.hero-avatar {
+  width:180px; height:180px; border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:3.6rem; letter-spacing:3px;
+  background:linear-gradient(135deg,#6b0000 0%,#e50914 50%,#ff4e00 100%);
+  box-shadow:0 16px 60px rgba(229,9,20,.4); color:#fff; position:relative; overflow:hidden;
+}
+.hero-avatar::after { content:''; position:absolute; inset:0; background:linear-gradient(155deg,rgba(255,255,255,.18) 0%,transparent 55%); }
+.hero-avatar .ini { position:relative; z-index:1; }
+.hero-text h1 { font-family:'DM Serif Display',serif; font-size:clamp(2.4rem,5vw,4rem); font-weight:400; line-height:1.05; margin-bottom:10px; background:linear-gradient(90deg,#fff 0%,#bbb 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero-tag { font-size:.82rem; color:var(--red); font-weight:600; letter-spacing:.07em; text-transform:uppercase; margin-bottom:18px; line-height:1.6; }
+.hero-contact { display:flex; flex-wrap:wrap; gap:12px 20px; font-size:.79rem; color:var(--muted); margin-bottom:28px; }
+.ci { display:flex; align-items:center; gap:6px; }
+.hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-primary { padding:10px 26px; background:var(--red); color:#fff; border:none; border-radius:4px; font-size:.84rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:.04em; transition:background .2s,transform .15s; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary:hover { background:#c4070f; transform:translateY(-2px); }
+.btn-outline { padding:10px 26px; background:none; color:#ccc; border:1px solid #444; border-radius:4px; font-size:.84rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:.04em; transition:all .2s; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+.btn-outline:hover { border-color:#aaa; color:#fff; transform:translateY(-2px); }
+@media(max-width:680px){ .hero-inner{flex-direction:column;text-align:center;} .hero-contact{justify-content:center;} .hero-btns{justify-content:center;} }
+
+/* ── ABOUT STRENGTHS ── */
+.about-text { font-size:.93rem; line-height:1.85; color:#c0c0c0; margin-bottom:22px; }
+.pill-row { display:flex; flex-wrap:wrap; gap:10px; }
+.pill { padding:6px 14px; border-radius:4px; font-size:.75rem; font-weight:600; background:rgba(229,9,20,.1); border:1px solid rgba(229,9,20,.28); color:#ff7070; }
+
+/* ── SKILLS ── */
+.skills-grid { display:flex; flex-wrap:wrap; gap:10px; }
+.sk { padding:7px 15px; border-radius:4px; font-size:.78rem; font-weight:500; background:var(--surface); color:#ccc; border:1px solid #2e2e2e; transition:border-color .2s,color .2s,transform .2s; }
+.sk:hover { border-color:var(--red); color:#fff; transform:translateY(-2px); }
+
+/* ── EXPERIENCE ── */
+.exp-list { display:flex; flex-direction:column; gap:20px; }
+.exp-card { background:var(--surface); border:1px solid #252525; border-radius:8px; padding:22px 24px; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
+.exp-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--red) 0%,rgba(229,9,20,.1) 100%); }
+.exp-card:hover { border-color:#333; transform:translateX(4px); }
+.exp-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:3px; flex-wrap:wrap; gap:8px; }
+.exp-role { font-weight:600; font-size:.96rem; }
+.exp-co { color:var(--red); font-size:.84rem; font-weight:600; margin-bottom:8px; }
+.exp-date { font-size:.73rem; color:var(--muted); background:var(--surface2); padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+.exp-sub { font-weight:600; font-size:.83rem; color:#e0e0e0; margin:12px 0 6px; border-top:1px dashed #2a2a2a; padding-top:12px; }
+.exp-ul { list-style:none; }
+.exp-ul li { font-size:.83rem; color:#aaa; line-height:1.7; padding-left:16px; position:relative; margin-bottom:3px; }
+.exp-ul li::before { content:'▸'; position:absolute; left:0; color:var(--red); font-size:.65rem; top:3px; }
+
+/* ── PROJECTS ── */
+.projects-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+.proj-card {
+  background:var(--surface); border:1px solid #252525; border-radius:10px;
+  overflow:hidden; transition:transform .25s,border-color .25s,box-shadow .25s; cursor:pointer;
+  display:flex; flex-direction:column;
+}
+.proj-card:hover { transform:translateY(-6px); border-color:#333; box-shadow:0 20px 50px rgba(0,0,0,.5); }
+.proj-banner { height:8px; }
+.proj-body { padding:20px 20px 16px; flex:1; display:flex; flex-direction:column; }
+.proj-icon { font-size:1.8rem; margin-bottom:12px; }
+.proj-title { font-weight:700; font-size:.97rem; margin-bottom:8px; }
+.proj-desc { font-size:.82rem; color:var(--muted); line-height:1.65; flex:1; }
+.proj-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:16px; }
+.proj-tag { padding:3px 10px; border-radius:20px; font-size:.7rem; font-weight:600; background:rgba(255,255,255,.06); color:#bbb; border:1px solid #333; }
+.proj-footer { padding:12px 20px; border-top:1px solid #252525; display:flex; gap:12px; }
+.proj-link { font-size:.76rem; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:5px; transition:color .2s; }
+.proj-link:hover { color:#fff; }
+
+/* ── CERTIFICATIONS ── */
+.cert-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+.cert-card { background:var(--surface); border:1px solid #252525; border-radius:8px; padding:20px; display:flex; gap:16px; align-items:flex-start; transition:border-color .2s,transform .2s; }
+.cert-card:hover { border-color:#3a3a3a; transform:translateY(-3px); }
+.cert-icon { width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+.cert-name { font-weight:600; font-size:.88rem; margin-bottom:5px; }
+.cert-org { font-size:.78rem; color:var(--muted); }
+.cert-year { font-size:.74rem; color:var(--red); font-weight:600; margin-top:5px; }
+
+/* ── GITHUB STATS ── */
+.gh-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.gh-card { background:var(--surface); border:1px solid #252525; border-radius:8px; padding:22px; display:flex; flex-direction:column; align-items:center; text-align:center; transition:border-color .2s,transform .2s; }
+.gh-card:hover { border-color:#333; transform:translateY(-3px); }
+.gh-num { font-family:'Bebas Neue',sans-serif; font-size:3rem; color:var(--red); line-height:1; }
+.gh-label { font-size:.78rem; color:var(--muted); margin-top:6px; letter-spacing:.05em; text-transform:uppercase; }
+.gh-banner {
+  grid-column:1/-1; background:var(--surface); border:1px solid #252525; border-radius:8px;
+  padding:24px; display:flex; align-items:center; gap:20px; transition:border-color .2s;
+}
+.gh-banner:hover { border-color:#333; }
+.gh-avatar-wrap { position:relative; }
+.gh-dot { width:12px; height:12px; border-radius:50%; background:#3fb950; position:absolute; bottom:2px; right:2px; border:2px solid var(--surface); }
+.gh-username { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:1px; }
+.gh-handle { font-size:.82rem; color:var(--muted); }
+.gh-profile-link { margin-top:10px; display:inline-flex; align-items:center; gap:6px; font-size:.78rem; color:var(--red); text-decoration:none; }
+.gh-profile-link:hover { color:#ff4e4e; }
+.lang-bar { height:8px; border-radius:4px; overflow:hidden; display:flex; margin-top:14px; width:100%; }
+.lang-seg { height:100%; transition:flex .5s; }
+.lang-legend { display:flex; flex-wrap:wrap; gap:10px 18px; margin-top:12px; font-size:.75rem; color:var(--muted); }
+.lang-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:5px; vertical-align:middle; }
+@media(max-width:560px){ .gh-grid{grid-template-columns:1fr;} }
+
+/* ── CONTACT ── */
+.contact-wrap { display:grid; grid-template-columns:1fr 1.4fr; gap:40px; }
+.contact-info h3 { font-family:'DM Serif Display',serif; font-size:1.5rem; font-weight:400; margin-bottom:14px; }
+.contact-info p { font-size:.88rem; color:var(--muted); line-height:1.7; margin-bottom:28px; }
+.contact-links { display:flex; flex-direction:column; gap:14px; }
+.clink { display:flex; align-items:center; gap:12px; text-decoration:none; color:#ccc; font-size:.85rem; transition:color .2s; }
+.clink:hover { color:#fff; }
+.clink-icon { width:38px; height:38px; border-radius:6px; background:var(--surface2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:.77rem; color:var(--muted); margin-bottom:7px; letter-spacing:.05em; text-transform:uppercase; }
+.form-group input, .form-group textarea {
+  width:100%; background:var(--surface); border:1px solid #2e2e2e; border-radius:6px;
+  padding:11px 14px; color:#fff; font-family:'DM Sans',sans-serif; font-size:.88rem;
+  transition:border-color .2s; resize:vertical; outline:none;
+}
+.form-group input:focus, .form-group textarea:focus { border-color:var(--red); }
+.form-group textarea { min-height:120px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.submit-btn {
+  width:100%; padding:12px; background:var(--red); border:none; border-radius:6px;
+  color:#fff; font-size:.9rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif;
+  letter-spacing:.04em; transition:background .2s,transform .15s; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.submit-btn:hover { background:#c4070f; transform:translateY(-2px); }
+.form-success { display:none; text-align:center; padding:40px 20px; }
+.form-success .check { font-size:3rem; margin-bottom:12px; }
+.form-success p { color:var(--muted); font-size:.9rem; }
+@media(max-width:680px){ .contact-wrap{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;} }
+
+/* ── EDUCATION (compact) ── */
+.edu-card { display:flex; gap:18px; background:var(--surface); border:1px solid #252525; border-radius:8px; padding:20px 24px; align-items:flex-start; }
+.edu-icon { width:44px; height:44px; border-radius:6px; background:linear-gradient(135deg,#1c1c1c,#2e2e2e); display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+.edu-degree { font-weight:600; font-size:.95rem; }
+.edu-school { color:var(--muted); font-size:.84rem; margin-top:4px; }
+.edu-year { color:var(--red); font-size:.78rem; margin-top:6px; font-weight:500; }
+
+/* ── FOOTER ── */
+footer { border-top:1px solid #1e1e1e; padding:32px 24px; text-align:center; font-size:.78rem; color:#555; }
+footer span { color:var(--red); }
+
+/* ── DIVIDER ── */
+.divider { border:none; border-top:1px solid #1e1e1e; }
+
+/* ── BACK BTN ── */
+.back-btn { display:none; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.sr { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
+.sr.visible { opacity:1; transform:translateY(0); }
+
+/* ── SCROLL HINT ── */
+.scroll-hint { position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--muted); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; animation:bounce 2s infinite; }
+.scroll-hint svg { opacity:.5; }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(8px);} }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav" id="nav">
+  <div class="logo" onclick="goBack()">WELCOME</div>
+  <div class="nav-links" id="nav-links" style="display:none;">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#certifications">Certifications</a>
+    <a href="#github">GitHub</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ══ WELCOME ══ -->
+<div id="welcome-screen">
+  <p class="welcome-title">Who's Watching?</p>
+  <div class="profiles">
+    <div class="profile-card" onclick="enterProfile()">
+      <div class="pa"><span class="ini">SSR</span></div>
+      <div class="pn">Shakti Singh Rana</div>
+    </div>
+    <div class="profile-card" style="opacity:.28;cursor:default;">
+      <div class="pa" style="background:linear-gradient(135deg,#1a2a3a,#2b5278);">
+        <span class="ini" style="font-size:2.8rem;">+</span>
+      </div>
+      <div class="pn">Add Profile</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN PORTFOLIO ══ -->
+<div id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-avatar"><span class="ini">SSR</span></div>
+      <div class="hero-text">
+        <div class="hero-tag">ITIL &amp; ITSM Specialist &nbsp;·&nbsp; AI &amp; ML · Drone Tech &nbsp;·&nbsp; Major Incident Manager</div>
+        <h1>Shakti Singh Rana</h1>
+        <div class="hero-contact">
+          <div class="ci"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>shakrana@gmail.com</div>
+          <div class="ci"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.09 4.18 2 2 0 015.07 2h3a2 2 0 012 1.72c.13 1 .38 1.97.74 2.9a2 2 0 01-.45 2.1L9 10a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.93.36 1.9.61 2.9.74A2 2 0 0122 16.92z"/></svg>9654821344</div>
+          <div class="ci"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Noida, Uttar Pradesh</div>
+        </div>
+        <div class="hero-btns">
+          <a class="btn-primary" href="#contact">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Hire Me
+          </a>
+          <a class="btn-outline" href="#projects">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            View Projects
+          </a>
+          <a class="btn-outline" href="https://linkedin.com/in/shakrana" target="_blank">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      Scroll to explore
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section sr">
+    <div class="section-label">About Me</div>
+    <div class="section-title">Who I Am</div>
+    <p class="about-text">
+      IT Professional with 7+ years across IT support, incident management, infrastructure administration, frontend development, and data analytics. My career reflects a constant drive to evolve — from managing critical incident bridges at Coforge to exploring AI-driven drone systems at Masai. I thrive at the intersection of technology and operations, bridging the gap between technical teams and business stakeholders to deliver real, lasting impact.
+    </p>
+    <div class="pill-row">
+      <span class="pill">✔ Python</span>
+      <span class="pill">✔ Numpy</span>
+      <span class="pill">✔ Pandas</span>
+      <span class="pill">✔ Matplotlib</span>
+      <span class="pill">✔ SciPy</span>
+      <span class="pill">✔ Seaborn</span>
+      <span class="pill">✔ Scikit-learn</span>
+      <span class="pill">✔ TensorFlow</span>
+      <span class="pill">✔ PyTorch</span>
+      <span class="pill">✔ Natural Language Processing</span>
+      <span class="pill">✔ ITSM &amp; Major Incident Handling</span>
+      <span class="pill">✔ Root Cause Analysis</span>
+      <span class="pill">✔ Reporting &amp; Dashboard Design</span>
+      <span class="pill">✔ Process Improvement</span>
+      <span class="pill">✔ Stakeholder Communication</span>
+    </div>
+    <br>
+    <!-- Skills -->
+    <div class="section-label" style="margin-top:32px;">Skills &amp; Tools</div>
+    <div class="skills-grid">
+      <span class="sk">Python</span><span class="sk">Numpy</span><span class="sk">Pandas</span>
+      <span class="sk">TensorFlow</span><span class="sk">Matplotlib</span><span class="sk">Drone Technology</span>
+      <span class="sk">Natural Language Processing</span><span class="sk">Seaborn</span><span class="sk">TensorFlow</span>
+      <span class="sk">ITIL / ITSM</span><span class="sk">Major Incident Mgmt</span><span class="sk">ServiceNow</span>
+      <span class="sk">PyTorch</span><span class="sk">Active Directory</span><span class="sk">Windows Server</span>
+      <span class="sk">UNIX</span><span class="sk">SCCM / ADAXES</span><span class="sk">Office 365</span>
+      <span class="sk">Frontend Dev</span><span class="sk">Data Visualization</span><span class="sk">Root Cause Analysis</span>
+    </div>
+    <br>
+    <!-- Education inline -->
+    <div class="section-label" style="margin-top:32px;">Education</div>
+    <div class="edu-card">
+      <div class="edu-icon">🎓</div>
+      <div>
+        <div class="edu-degree">B.E. — Computer Engineering</div>
+        <div class="edu-school">Noida International University</div>
+        <div class="edu-year">2012 – 2016</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="section sr">
+    <div class="section-label">Work Experience</div>
+    <div class="section-title">Career Timeline</div>
+    <div class="exp-list">
+
+      <div class="exp-card">
+        <div class="exp-top"><div><div class="exp-role">AI &amp; ML with Drone Tech — Specialized Program</div><div class="exp-co">Masai</div></div><span class="exp-date">Sep 2025 – Feb 2026 · 6 mos</span></div>
+        <ul class="exp-ul">
+          <li>Completed hands-on program in AI, ML, and Drone Technology.</li>
+          <li>Designed and deployed AI-driven drone navigation and object detection models using Python and TensorFlow.</li>
+          <li>Applied predictive analytics and data visualization to optimize drone flight performance and mission efficiency.</li>
+          <li>Collaborated on projects integrating AI for aerial surveillance and environmental monitoring.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-top"><div><div class="exp-role">Senior Associate</div><div class="exp-co">Coforge</div></div><span class="exp-date">Aug 2019 – Dec 2023 · 4 yrs 5 mos · Noida</span></div>
+        <div class="exp-sub">▸ Major Incident Manager <span style="color:var(--muted);font-weight:400;">(Promoted after 1 year)</span></div>
+        <ul class="exp-ul">
+          <li>Identified, categorized, and escalated critical incidents based on business impact and urgency.</li>
+          <li>Coordinated with IT teams and vendors for swift resolution and minimal downtime.</li>
+          <li>Led post-incident root cause analysis and implemented preventive measures.</li>
+          <li>Developed strategies to improve incident response times and cross-team communication.</li>
+        </ul>
+        <div class="exp-sub">▸ Service Desk Agent <span style="color:var(--muted);font-weight:400;">(Initial Role)</span></div>
+        <ul class="exp-ul">
+          <li>Managed IT support requests via phone, email, and online platforms.</li>
+          <li>Developed user training materials and conducted sessions to reduce repeat incidents.</li>
+          <li>Analyzed trends and recommended process improvements to increase resolution efficiency.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-top"><div><div class="exp-role">Frontend Web Developer</div><div class="exp-co">Tatvaware</div></div><span class="exp-date">Oct 2018 – Jul 2019 · 10 mos · Noida</span></div>
+        <ul class="exp-ul">
+          <li>Developed dynamic, interactive websites focused on high traffic retention and optimal UX.</li>
+          <li>Created internal/external design specifications; upgraded and maintained client websites.</li>
+          <li>Designed cleanup and performance improvement processes aligned with client business needs.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-top"><div><div class="exp-role">Business Associate — Global Workforce Management</div><div class="exp-co">NTT DATA Services</div></div><span class="exp-date">Feb 2018 – Oct 2018 · 9 mos · Noida</span></div>
+        <ul class="exp-ul">
+          <li>Supported the Global Workforce Management team with data interpretation and statistical analysis.</li>
+          <li>Applied data normalization, deduplication, and pivoting to enhance data quality.</li>
+          <li>Compiled ongoing workforce reports for leadership stakeholders.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-top"><div><div class="exp-role">Data Analyst — IT Infrastructure &amp; System Management</div><div class="exp-co">HCL Technologies</div></div><span class="exp-date">Nov 2016 – Dec 2017 · 1 yr 2 mos · Noida</span></div>
+        <ul class="exp-ul">
+          <li>Managed IT infrastructure operations ensuring seamless system performance and high availability.</li>
+          <li>Administered Windows servers, UNIX environments, Active Directory, and network/backup monitoring.</li>
+          <li>Utilized IBM Tivoli for server monitoring and ServiceNow for ITSM workflows.</li>
+          <li>Worked with JDE, ADAXES, SCCM, and Office 365 for user account and license management.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section sr">
+    <div class="section-label">Portfolio</div>
+    <div class="section-title">Featured Projects</div>
+    <div class="projects-grid">
+
+      <div class="proj-card">
+        <div class="proj-banner" style="background:linear-gradient(90deg,#e50914,#ff6b35);"></div>
+        <div class="proj-body">
+          <div class="proj-icon">🚁</div>
+          <div class="proj-title">AI Drone Navigation System</div>
+          <div class="proj-desc">Autonomous drone navigation and obstacle avoidance system using computer vision and deep learning. Achieved 92% object detection accuracy in real-time aerial footage.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Python</span><span class="proj-tag">TensorFlow</span><span class="proj-tag">OpenCV</span><span class="proj-tag">Drone SDK</span>
+          </div>
+        </div>
+        <div class="proj-footer">
+          <a class="proj-link" href="https://github.com/shakrana" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            GitHub
+          </a>
+          <a class="proj-link" href="#" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live Demo
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-banner" style="background:linear-gradient(90deg,#0070f3,#00c6ff);"></div>
+        <div class="proj-body">
+          <div class="proj-icon">📊</div>
+          <div class="proj-title">Incident Management Dashboard</div>
+          <div class="proj-desc">Real-time ITSM dashboard for tracking major incidents, SLA breach alerts, and team performance KPIs. Reduced average resolution time by 30% in production use.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">ServiceNow</span><span class="proj-tag">Python</span><span class="proj-tag">Power BI</span><span class="proj-tag">SQL</span>
+          </div>
+        </div>
+        <div class="proj-footer">
+          <a class="proj-link" href="https://github.com/shakrana" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            GitHub
+          </a>
+          <a class="proj-link" href="#" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live Demo
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-banner" style="background:linear-gradient(90deg,#7c3aed,#c084fc);"></div>
+        <div class="proj-body">
+          <div class="proj-icon">🌍</div>
+          <div class="proj-title">Aerial Surveillance &amp; Env Monitoring</div>
+          <div class="proj-desc">ML pipeline for environmental monitoring using drone footage. Detects deforestation patterns, water body changes, and unauthorized construction using satellite + drone image fusion.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Python</span><span class="proj-tag">Computer Vision</span><span class="proj-tag">NumPy</span><span class="proj-tag">Matplotlib</span>
+          </div>
+        </div>
+        <div class="proj-footer">
+          <a class="proj-link" href="https://github.com/shakrana" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-banner" style="background:linear-gradient(90deg,#059669,#34d399);"></div>
+        <div class="proj-body">
+          <div class="proj-icon">🔍</div>
+          <div class="proj-title">IT Root Cause Analysis Automation</div>
+          <div class="proj-desc">Python script automating RCA report generation from incident logs. Reduced manual report writing time from 4 hours to under 20 minutes per major incident.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Python</span><span class="proj-tag">Pandas</span><span class="proj-tag">NLP</span><span class="proj-tag">Excel</span>
+          </div>
+        </div>
+        <div class="proj-footer">
+          <a class="proj-link" href="https://github.com/shakrana" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-banner" style="background:linear-gradient(90deg,#f59e0b,#fcd34d);"></div>
+        <div class="proj-body">
+          <div class="proj-icon">💼</div>
+          <div class="proj-title">Netflix-Style Portfolio Website</div>
+          <div class="proj-desc">This very site — a fully custom HTML/CSS portfolio built with a Netflix-inspired UI, featuring profile selection, animated transitions, and a responsive resume layout.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span><span class="proj-tag">GitHub Pages</span>
+          </div>
+        </div>
+        <div class="proj-footer">
+          <a class="proj-link" href="https://github.com/shakrana" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            Source
+          </a>
+          <a class="proj-link" href="#" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-banner" style="background:linear-gradient(90deg,#ec4899,#f43f5e);"></div>
+        <div class="proj-body">
+          <div class="proj-icon">📈</div>
+          <div class="proj-title">Workforce Analytics Tool</div>
+          <div class="proj-desc">Data pipeline and reporting tool built during NTT DATA tenure for global workforce insights — automated job ad performance tracking and headcount trend visualizations.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Python</span><span class="proj-tag">Pandas</span><span class="proj-tag">Statistics</span><span class="proj-tag">Excel</span>
+          </div>
+        </div>
+        <div class="proj-footer">
+          <a class="proj-link" href="https://github.com/shakrana" target="_blank">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications" class="section sr">
+    <div class="section-label">Credentials</div>
+    <div class="section-title">Certifications</div>
+    <div class="cert-grid">
+
+      <div class="cert-card">
+        <div class="cert-icon" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">🤖</div>
+        <div>
+          <div class="cert-name">AI &amp; ML with Drone Technology</div>
+          <div class="cert-org">Masai School</div>
+          <div class="cert-year">2026</div>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon" style="background:linear-gradient(135deg,#0d1117,#238636);">📋</div>
+        <div>
+          <div class="cert-name">Python for Data Science</div>
+          <div class="cert-org">NumPy / Pandas</div>
+          <div class="cert-year">2026</div>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon" style="background:linear-gradient(135deg,#0a0a2a,#1a56db);">☁️</div>
+        <div>
+          <div class="cert-name">ServiceNow Certified System Admin</div>
+          <div class="cert-org">ServiceNow</div>
+          <div class="cert-year">2025</div>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon" style="background:linear-gradient(135deg,#1a0a00,#ff6a00);">🐍</div>
+        <div>
+          <div class="cert-name">Python for Data Science</div>
+          <div class="cert-org">Coursera / IBM</div>
+          <div class="cert-year">2026</div>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-icon" style="background:linear-gradient(135deg,#0a1628,#0078d4);">🪟</div>
+        <div>
+          <div class="cert-name">Microsoft Office 365 Admin</div>
+          <div class="cert-org">Microsoft</div>
+          <div class="cert-year">2018</div>
+        </div>
+      </div>
+
+      <div class="cert-card" style="border:1px dashed #333; background:transparent; cursor:pointer;" onclick="alert('Add your own certifications here!')">
+        <div class="cert-icon" style="background:transparent;">➕</div>
+        <div>
+          <div class="cert-name" style="color:var(--muted);">Add Your Certification</div>
+          <div class="cert-org" style="color:#555;">Update this card</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- GITHUB STATS -->
+  <section id="github" class="section sr">
+    <div class="section-label">Open Source</div>
+    <div class="section-title">GitHub Activity</div>
+    <div class="gh-grid">
+
+      <div class="gh-banner" style="grid-column:1/-1;">
+        <div class="gh-avatar-wrap">
+          <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#6b0000,#e50914);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#fff;">SSR</div>
+          <div class="gh-dot"></div>
+        </div>
+        <div>
+          <div class="gh-username">shakrana</div>
+          <div class="gh-handle">github.com/shakrana</div>
+          <a class="gh-profile-link" href="https://github.com/shakrana" target="_blank">
+            View Full Profile →
+          </a>
+        </div>
+        <div style="margin-left:auto;text-align:right;">
+          <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">Top Languages</div>
+          <div class="lang-bar" style="width:220px;">
+            <div class="lang-seg" style="flex:4;background:#3572A5;" title="Python"></div>
+            <div class="lang-seg" style="flex:2;background:#e34c26;" title="HTML"></div>
+            <div class="lang-seg" style="flex:1.5;background:#f1e05a;" title="JavaScript"></div>
+            <div class="lang-seg" style="flex:1;background:#563d7c;" title="CSS"></div>
+            <div class="lang-seg" style="flex:.5;background:#555;" title="Other"></div>
+          </div>
+          <div class="lang-legend">
+            <span><span class="lang-dot" style="background:#3572A5;"></span>Python 44%</span>
+            <span><span class="lang-dot" style="background:#e34c26;"></span>HTML 22%</span>
+            <span><span class="lang-dot" style="background:#f1e05a;"></span>JS 17%</span>
+            <span><span class="lang-dot" style="background:#563d7c;"></span>CSS 11%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gh-card">
+        <div class="gh-num" id="gh-repos">—</div>
+        <div class="gh-label">Public Repos</div>
+      </div>
+      <div class="gh-card">
+        <div class="gh-num" id="gh-stars">—</div>
+        <div class="gh-label">Total Stars</div>
+      </div>
+      <div class="gh-card">
+        <div class="gh-num" id="gh-followers">—</div>
+        <div class="gh-label">Followers</div>
+      </div>
+      <div class="gh-card">
+        <div class="gh-num">6+</div>
+        <div class="gh-label">Projects Built</div>
+      </div>
+
+    </div>
+    <p style="font-size:.78rem;color:#555;margin-top:16px;text-align:center;">* Update your GitHub username in the script to load live stats</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CONTACT -->
+  <section id="contact" class="section sr">
+    <div class="section-label">Get In Touch</div>
+    <div class="section-title">Contact Me</div>
+    <div class="contact-wrap">
+
+      <div class="contact-info">
+        <h3>Let's work together.</h3>
+        <p>Open to new opportunities in ITSM leadership, AI/ML roles, and drone technology projects. Feel free to reach out for collaborations or just a chat.</p>
+        <div class="contact-links">
+          <a class="clink" href="mailto:shakrana@gmail.com">
+            <div class="clink-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></div>
+            <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Email</div>shakrana@gmail.com</div>
+          </a>
+          <a class="clink" href="tel:9654821344">
+            <div class="clink-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.09 4.18 2 2 0 015.07 2h3a2 2 0 012 1.72c.13 1 .38 1.97.74 2.9a2 2 0 01-.45 2.1L9 10a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.93.36 1.9.61 2.9.74A2 2 0 0122 16.92z"/></svg></div>
+            <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Phone</div>9654821344</div>
+          </a>
+          <a class="clink" href="https://linkedin.com/in/shakrana" target="_blank">
+            <div class="clink-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+            <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">LinkedIn</div>linkedin.com/in/shakrana</div>
+          </a>
+          <a class="clink" href="https://github.com/shakrana" target="_blank">
+            <div class="clink-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg></div>
+            <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">GitHub</div>github.com/shakrana</div>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div id="contact-form">
+          <div class="form-row">
+            <div class="form-group"><label>Name</label><input type="text" id="f-name" placeholder="Your name"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="your@email.com"></div>
+          </div>
+          <div class="form-group"><label>Subject</label><input type="text" id="f-subject" placeholder="What's this about?"></div>
+          <div class="form-group"><label>Message</label><textarea id="f-msg" placeholder="Tell me about the opportunity or project..."></textarea></div>
+          <button class="submit-btn" onclick="submitForm()">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          </button>
+        </div>
+        <div class="form-success" id="form-success">
+          <div class="check">✅</div>
+          <p style="font-size:1rem;font-weight:600;color:#fff;margin-bottom:8px;">Message sent!</p>
+          <p>Thanks for reaching out. I'll get back to you soon.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    Built with <span>♥</span> by Shakti Singh Rana &nbsp;·&nbsp; Hosted on GitHub Pages &nbsp;·&nbsp; <span>© 2026</span>
+  </footer>
+
+</div><!-- /main -->
+
+<script>
+  // ── Profile transition ──
+  function enterProfile() {
+    const ws = document.getElementById('welcome-screen');
+    ws.classList.add('exit');
+    setTimeout(() => {
+      ws.style.display = 'none';
+      document.getElementById('main').classList.add('show');
+      document.getElementById('nav-links').style.display = 'flex';
+      window.scrollTo(0,0);
+      observeSections();
+    }, 680);
+  }
+  function goBack() {
+    document.getElementById('main').classList.remove('show');
+    document.getElementById('nav-links').style.display = 'none';
+    const ws = document.getElementById('welcome-screen');
+    ws.style.display = 'flex';
+    requestAnimationFrame(() => ws.classList.remove('exit'));
+  }
+
+  // ── Nav solid on scroll ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('solid', window.scrollY > 60);
+  });
+
+  // ── Scroll reveal ──
+  function observeSections() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.sr').forEach(el => obs.observe(el));
+  }
+
+  // ── GitHub stats (live fetch) ──
+  async function loadGitHub() {
+    try {
+      const res = await fetch('https://api.github.com/users/shakrana');
+      if(!res.ok) return;
+      const d = await res.json();
+      document.getElementById('gh-repos').textContent = d.public_repos ?? '—';
+      document.getElementById('gh-followers').textContent = d.followers ?? '—';
+      // fetch stars
+      const rRes = await fetch('https://api.github.com/users/shakrana/repos?per_page=100');
+      if(rRes.ok){
+        const repos = await rRes.json();
+        const stars = repos.reduce((s,r) => s + (r.stargazers_count||0), 0);
+        document.getElementById('gh-stars').textContent = stars;
+      }
+    } catch(e) { console.log('GitHub API unavailable'); }
+  }
+
+  // ── Contact form ──
+  function submitForm() {
+    const n = document.getElementById('f-name').value.trim();
+    const e = document.getElementById('f-email').value.trim();
+    const m = document.getElementById('f-msg').value.trim();
+    if(!n || !e || !m) { alert('Please fill in Name, Email, and Message.'); return; }
+    document.getElementById('contact-form').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+
+  // load GH stats when page is ready
+  window.addEventListener('load', loadGitHub);
+</script>
+</body>
+</html>
